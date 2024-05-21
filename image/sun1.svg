@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" style="font-size: 128px;" height="128" xml:space="preserve" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" version="1.1" y="0px" width="128">
+    <g transform="matrix(0.28571429,0,0,0.28571429,-18.285714,-18.285714)">
+        <g id="设计">
+            <g>
+                <g>
+                    <circle style="fill:none;stroke:#FFDC3C;stroke-width:32;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:64.6296,64.6296;" r="432" cy="512" cx="512"></circle>
+                </g>
+                <g>
+                    <circle style="fill:none;stroke:#FFDC3C;stroke-width:32;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:128.4613,128.4613;" r="368" cy="512" cx="512"></circle>
+                </g>
+                <g>
+                    <circle style="fill:none;stroke:#FFDC3C;stroke-width:32;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:238.7705,238.7705;" r="304" cy="512" cx="512"></circle>
+                </g>
+                <circle style="fill:#FFDC3C;stroke:#0A3764;stroke-width:32;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" r="208" cy="512" cx="512"></circle>
+            </g>
+        </g>
+        <g id="参考线_1_"></g>
+    </g>
+</svg>
