@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Introduction</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"></script>
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Poetsen+One&family=Sedan+SC&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Platypi:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Platypi:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh; 
+            flex-direction: row-reverse; 
+        }
+
+        #map {
+            flex-grow: 1; 
+            height: 100vh; 
+        }
+
+        #description-box {
+            width: 300px; 
+            height: 94vh; 
+            padding: 30px 40px 10px 40px; 
+            background: rgba(14, 7, 29, 0.85); 
+            border-right: 0.8px dashed #ccc; 
+            box-shadow: 0px 8px 16px rgba(255, 245, 212, 0.3); 
+            z-index: 1; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease-in-out;
+        }
+        
+        #description-box h3 {
+            font-size: 36px; 
+            margin-top: -8%;
+            margin-bottom: 5px; 
+            color: rgba(255, 250, 220);
+            font-family: 'Georgia', sans-serif;
+            font-weight: bold;
+            font-style: italic;
+            text-shadow: 3px 3px 2px rgba(234,129,87,0.6);
+            border-bottom: 2px dashed rgba(255, 255, 255, 0.5);
+            padding-bottom: 25px;
+        }
+        
+        #description-box ul {
+            padding-left: 20px; 
+        }
+        
+        #description-box li {
+            font-size: 14px; 
+            margin-bottom: 10px; 
+            color: rgba(255, 254, 240);
+            font-family: 'EB Garamond', sans-serif;
+            text-align: justify;
+            line-height: 1.5; 
+        }
+        
+        #description-box strong {
+            font-weight: bold;
+            text-shadow: 3px 2px 2px rgba(248, 234, 180, 0.3);
+        }
+        
+        #description-box p {
+            font-size: 12px; 
+            margin-bottom: 1px; 
+            margin-top: 2px; 
+            color: rgba(255, 254, 240);
+            font-family: 'EB Garamond', sans-serif;
+            line-height: 1.6;
+        }
+        
+        #description-box img {
+            width: 300px;
+            height: auto; 
+            margin-top: 2px;
+            margin-bottom: 1px;
+            margin-left: auto; 
+            margin-right: auto; 
+        }
+        
+        @keyframes floatAnimation {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+        
+        #next-page-button {
+            position: relative;
+            top: -5.8%;
+            left: 53.5%;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 2;
+            color: rgba(255, 254, 240);
+            animation: floatAnimation 3s infinite; 
+            animation-play-state: running;
+        }
+
+        #next-page-button:hover {
+            transform: scale(1.2); 
+            animation-play-state: paused;
+        }
+        
+        #click-text {
+            position: relative;
+            top: -2.5%;
+            left: 30.5%;
+            font-size: 13px;
+            font-family: 'Courier New', sans-serif;
+            color: rgba(255, 254, 240);
+            opacity: 0.6;
+            text-decoration: underline;
+            z-index: 2;
+        }
+        
+        #floating-box {
+            position: fixed;
+            bottom: 9%;
+            left: 35%;
+            padding: 25px 25px 15px 25px;
+            background-color: rgba(14, 7, 29, 0.85);
+            color: white;
+            border-radius: 0px;
+            z-index: 3;
+            width: 310px;
+            text-align: center;
+            font-family: 'EB Garamond', sans-serif;
+            box-shadow: 5px 8px 16px rgba(0, 0, 0, 0.8);
+            display: none;
+        }
+                
+        #floating-box p {
+            font-size: 12px;
+            margin-bottom: 1px;
+            margin-top: 5px; 
+            color: rgba(255, 254, 240);
+            font-family: 'EB Garamond', sans-serif;
+            line-height: 1.6;
+            padding: 0px 0px 0px 180px;
+        }
+
+        #floating-box img {
+            margin-bottom: 1px; 
+            vertical-align: middle;
+        }
+        
+        a {
+            color: rgba(174, 170, 159, 0.8);
+        }
+        
+    </style>
+</head>
+<body>
+<div id="map"></div>
+<div id="description-box">
+    <div id="click-text">CLICK HERE :</div>
+    <div id="next-page-button">&#9654;</div> 
+    <div id="description1">
+        <h3>The Greater Bay Area (GBA)</h3>
+        <ul>
+            <li>A thriving economic region in <strong>Southern China</strong>, comprising <strong>Hong Kong</strong>, <strong>Macao</strong>, and nine other cities in Guangdong Province</li>
+            <li>High Urban <strong>Density</strong> and <strong>Diversity</strong></li>
+            <li><strong>Technological</strong> and Research Infrastructure</li>
+            <li>Policy Framework and <strong>International</strong> Collaboration</li>
+        </ul>
+        <img src="https://raw.githubusercontent.com/mazzylion/CASA-0003/main/image/GBA1.jpg" alt="Description Image">
+        <p>Source: <a href="https://unsplash.com//">unsplash</a></p>
+    </div>
+    <div id="description2" style="display: none;">
+        <h3>Urban Heat Island Effect (UHI)</h3>
+        <ul>
+            <li>An environmental phenomenon where <strong>urban</strong> areas experience significantly <strong>higher temperatures</strong> (average temperature difference can be <strong>1 to 3-degree celsius</strong>) than their <strong>rural</strong> counterparts</li>
+            <li>Solve it to Improve <strong>Health</strong> and <strong>Energy</strong> Efficiency</li>
+            <li>And Make better <strong>Environmental</strong> Management and <strong>Urban</strong> Planning</li>
+        </ul>
+        <img src="https://raw.githubusercontent.com/mazzylion/CASA-0003/main/image/UHI.png" alt="Urban Heat Island Image">
+        <p>Source: <a href="https://www.palmtalk.org/forum/topic/69735-ueban-heat-islands/">ueban-heat-islands</a></p>
+    </div>
+    <div id="floating-box" style="display: none;">
+        <img src="https://raw.githubusercontent.com/mazzylion/CASA-0003/main/image/UHI1.jpg" alt="Urban Heat Island Image">
+        <p>Source: <a href="https://earth.org/data_visualization/urban-heat-islands/">urban-heat-islands</a></p>
+    </div>
+</div>
+
+<script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoibWF6enlsaW9uIiwiYSI6ImNsdng4eTZzMTF2Z2MyaW53NTcxdmg3OXQifQ.KfLEWLCqbisYj8NDb_DyBw';
+
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mazzylion/clwcml85l003801pcbyvugikv',
+        center: [113.300, 23.022],
+        zoom: 7.1,
+        maxZoom: 7.1,
+        minZoom: 6.8,
+        projection: 'mercator'
+    });
+
+    map.on('load', function() {
+        map.addSource('boundary', {
+            'type': 'geojson',
+            'data': 'https://raw.githubusercontent.com/mazzylion/CASA-0003/main/city_boudaries/GBA.geojson' 
+        });
+
+        map.addLayer({
+            'id': 'boundary',
+            'type': 'fill',
+            'source': 'boundary',
+            'layout': {},
+            'paint': {
+                'fill-color': [
+                    'match',
+                    ['get', 'ADM2_ZH'],
+                    '东莞市', '#FFDDFC',
+                    '中山市', '#FAE5FF',
+                    '珠海市', '#FFF6B0',
+                    '香港', '#7BBBFF',
+                    '江门市', '#DDF0FF',
+                    '广州市', '#F7A584',
+                    '肇庆市', '#E0DDFF',
+                    '惠州市', '#DDFCFF',
+                    '佛山市', '#FFDDE1',
+                    '深圳市', '#BFF673',
+                    '澳门', '#817BFF',
+                    '#D8D8D8'
+                ],
+                'fill-opacity': 0
+            }
+        });
+        
+        var opacity = 0;
+        var interval = setInterval(function() {
+            if (opacity < 0.6) {
+                opacity += 0.02;
+                map.setPaintProperty('boundary', 'fill-opacity', opacity);
+            } else {
+                clearInterval(interval);
+            }
+        }, 50);
+
+        map.addSource('label-source', {
+            'type': 'geojson',
+            'data': 'https://raw.githubusercontent.com/mazzylion/CASA-0003/main/city_boudaries/label.geojson' 
+        });
+
+        map.addLayer({
+            'id': 'boundary-labels',
+            'type': 'symbol',
+            'source': 'label-source',
+            'layout': {
+                'text-field': ['get', 'ADM2_EN'],
+                'text-font': ['DIN Offc Pro Italic'],
+                'text-size': 13,
+                'text-anchor': 'center',
+                'text-ignore-placement': true
+            },
+            'paint': {
+                'text-color': '#ffffff',
+                'text-opacity': 0 
+            }
+        });
+
+        var labelOpacity = 0;
+        var labelInterval = setInterval(function() {
+            if (labelOpacity < 1) {
+                labelOpacity += 0.01;
+                map.setPaintProperty('boundary-labels', 'text-opacity', labelOpacity);
+            } else {
+                clearInterval(labelInterval);
+            }
+        }, 20);
+    });
+
+    var descriptions = [
+        {
+            title: "The Greater Bay Area (GBA)",
+            content:`
+                <ul>
+                    <li>A thriving economic region in <strong>Southern China</strong>, comprising <strong>Hong Kong</strong>, <strong>Macao</strong>, and nine other cities in Guangdong Province</li>
+                    <li>High Urban <strong>Density</strong> and <strong>Diversity</strong></li>
+                    <li><strong>Technological</strong> and Research Infrastructure</li>
+                    <li>Policy Framework and <strong>International</strong> Collaboration</li>
+                </ul>
+            `,
+            image: "https://raw.githubusercontent.com/mazzylion/CASA-0003/main/image/GBA1.jpg",
+            center: [113.300, 23.022],
+            zoom: 7.1
+        },
+        {
+            title: "Urban Heat Island Effect (UHI)",
+            content: `
+                 <ul>
+                    <li>An environmental phenomenon where <strong>urban</strong> areas experience significantly <strong>higher temperatures</strong> (average temperature difference can be <strong>1 to 3-degree celsius</strong>) than their <strong>rural</strong> counterparts</li>
+                    <li>Solve it to Improve <strong>Health</strong> and <strong>Energy</strong> Efficiency</li>
+                    <li>And Make better <strong>Environmental</strong> Management and <strong>Urban</strong> Planning</li>
+                </ul>
+            `,
+            image: "https://raw.githubusercontent.com/mazzylion/CASA-0003/main/image/UHI.png",
+            center: [112.300, 22.850], 
+            zoom: 6.8
+        }
+    ];
+
+    var currentIndex = 0;
+    var nextPageButton = document.getElementById("next-page-button");
+    var descriptionBox = document.getElementById("description-box");
+    var description1 = document.getElementById("description1");
+    var description2 = document.getElementById("description2");
+
+    function updateDescription() {
+        var description = descriptions[currentIndex];
+        var currentDescription = currentIndex === 0 ? description1 : description2;
+        var otherDescription = currentIndex === 0 ? description2 : description1;
+
+        currentDescription.innerHTML = `
+            <h3>${description.title}</h3>
+            ${description.content}
+            <img src="${description.image}" alt="Description Image">
+            <p>Source: <a href="https://unsplash.com/">unsplash</a></p>
+        `;
+
+        currentDescription.style.display = "block";
+        otherDescription.style.display = "none";
+        descriptionBox.style.opacity = 1;
+
+        map.flyTo({
+            center: description.center,
+            zoom: description.zoom,
+            essential: true,
+            duration: 1000
+        });
+
+        if (description.title === "Urban Heat Island Effect (UHI)") {
+            document.getElementById('floating-box').style.display = 'block';
+        } else {
+            document.getElementById('floating-box').style.display = 'none';
+        }
+    }
+
+    nextPageButton.addEventListener("click", function() {
+        currentIndex = (currentIndex + 1) % descriptions.length;
+        descriptionBox.style.opacity = 0;
+        setTimeout(function() {
+            updateDescription();
+        }, 1000);
+    });
+    
+    nextPageButton.addEventListener("mouseenter", function() {
+        nextPageButton.style.animationPlayState = 'paused'; 
+    });
+
+    nextPageButton.addEventListener("mouseleave", function() {
+        nextPageButton.style.animationPlayState = 'running'; 
+    });
+
+    updateDescription();
+
+</script>
+</body>
+</html>

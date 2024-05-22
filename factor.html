@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>Factors of the UHI</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css' rel='stylesheet' />
+    <link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Poetsen+One&family=Sedan+SC&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Platypi:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Platypi:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Raleway', sans-serif;
+            font-size: 12px;
+            color: white;
+            background-color: #333; 
+        }
+        
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+                
+        h2 {
+            font-size: 14px;
+            line-height: 20px;
+            margin-bottom: 1px;
+        }
+
+        h3 {
+            font-size: 10px;
+            line-height: -5px;
+        }
+        
+        p {
+            width: 100%;
+        }
+        
+        a {
+            color: white;
+        }
+        
+        u {
+            color: white;
+        }
+        
+        #console {
+            position: absolute;
+            left: -5px;
+            width: 250px;
+            height: 95%;
+            margin-left: 8px;
+            padding: 10px 10px 20px 20px;
+            background-color: rgba(62,62,62,0.7);
+            opacity: 1;
+            box-shadow: 0px 1px 8px 3px rgba(0,0,0,0.2);
+        }
+        
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-top: 54px;
+        }
+        
+        .button-text {
+            color: #FFF;
+            font-size: 13px;
+            font-family: 'Raleway', sans-serif; 
+            font-weight: bold;
+            text-decoration: underline;
+            position: absolute;
+            top: 226px;
+            left: 18px;
+        }
+
+        .button-wrapper {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .button {
+            background-color: rgba(133, 112, 143, 0);
+            border: 3.5px solid white;
+            border-radius: 5px;
+            width: 9px;
+            height: 9px;
+            margin-left: 10px;
+            margin-right: 10px;
+            cursor: pointer; 
+            transition: background-color 0.3s;
+        }
+
+        .button.active {
+            background-color: rgb(196, 173, 214, 0.8);
+        }
+
+        .button-label {
+            font-size: 12px;
+            font-family: Raleway, sans-serif;
+            font-weight: bold;
+            font-style: italic;
+            color: white;
+            opacity: 1;
+        }
+
+        .slider-container {
+            width: 100%;
+            position: relative;
+            margin-top: 35px;
+        }
+
+        .slider-text {
+            color: #FFF;
+            font-size: 13px;
+            font-family: Raleway, sans-serif; 
+            font-weight: bold;
+            text-decoration: underline;
+            position: absolute;
+            top: -25px;
+            left: 0px;
+        }
+
+        .slider-track {
+            display: none; 
+        }
+
+        .slider-point {
+            display: none; 
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            width: 95%;
+            height: 4px;
+            background: rgba(213, 244, 241, 0.7);
+            outline: none; 
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 13px;
+            height: 13px;
+            background: rgb(1,54,49,0.8);
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #aaa; 
+            box-shadow: 0 0 4px #00000050; 
+            transition: transform 0.3s ease-in-out; 
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2); 
+        }
+
+        .slider-label {
+            color: #FFF;
+            font-size: 12px;
+            font-family: Raleway, sans-serif;
+            font-weight: bold;
+            position: absolute;
+            top: 20px; 
+            left: 170px;
+        }
+        
+        .legend_source {
+            position: relative;
+            left: -30px;
+            top: 70px;
+            width: 230px;
+            height: 150px;
+            margin: 8px;
+            padding: 10px 10px 20px 20px;
+        }
+        
+        .legend {
+            position: absolute;
+            top: -85px;
+        }
+        
+        #h2_legend{
+            rgba(255,255,255,0.8);
+            padding-top: 1px;
+        }
+        
+        .temp_legend_gradient {
+          width: 230px;
+          height: 10px;
+          background: linear-gradient(to right, rgba(40, 116, 166, 0.4), rgba(245, 176, 65, 0.4), rgba(123, 36, 28, 0.3));
+          border-radius: 2px;
+          margin-top: 4px;
+        }
+        
+        .pop_legend_gradient {
+          width: 230px;
+          height: 10px;
+          background: linear-gradient(to right, rgba(235, 222, 240, 0.7), rgba(136, 78, 160, 0.75), rgba(81, 46, 95, 1));
+          border-radius: 2px;
+          margin-top: 2px;
+        }
+        
+        .land_legend_gradient {
+          width: 230px;
+          height: 10px;
+          background: linear-gradient(to right, rgba(229, 232, 232, 0.7), rgba(112, 123, 124, 0.75), rgba(66, 73, 73, 1));
+          border-radius: 2px;
+          margin-top: 2px;
+        }
+        
+        .legend-text{
+          text-align:center;
+          font-size: 11px;
+          margin-bottom: 2px;
+        }
+        
+        #table_temp {
+            width: 230px;
+        }
+        
+        .tr_temp {
+            width: 150px;
+            text-align: left;
+        }
+        
+        #h2_source{
+            margin-bottom: -10px;
+        }
+        
+        .source {
+            position: relative;
+            top: 110px;
+        }
+        
+        .description {
+            position: relative;
+            top: 30px;
+        }
+        
+        .description h1 {
+            font-family: "Georgia", sans-serif; 
+            font-size: 28px; 
+            position: relative;
+            font-style: italic;
+            top: -35px;
+            left: -10px;
+            text-align: center;
+            color: #FFF7E1; 
+            text-shadow: 2px 2px 2px rgba(230, 216, 178, 0.4);
+            background-color: rgba(15, 60, 55, 0.6); 
+            padding: 13px; 
+            z-index: 1; 
+        }
+        
+    </style>
+</head>
+
+
+<body>
+<style>
+    body {
+        overflow: hidden;
+    }
+
+    body * {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    .map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+    }
+</style>
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.4.0/mapbox-gl-compare.js"></script>
+<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.4.0/mapbox-gl-compare.css" type="text/css">
+    
+    
+    
+<div id="map-container">
+    <div id="temper" class="map"></div>
+    <div id="urban" class="map"></div>
+</div>
+
+<div id="console">
+    <div class="description">
+        <h1> Factors of the UHI: Urbanization </h1>
+    </div>
+    <div class="slider-container">
+        <div class="slider-text">Select the Year You Want:</div>
+        <div class="slider-label">Year: <span id="year-label">2000</span></div>
+        <input id="year-slider" type="range" min="2000" max="2020" step="5" value="2000" class="slider" />
+    </div>  
+    
+    <div class="button-container">
+        <div class="button-text">Select the Layer You Want:</div>
+        <div class="button-wrapper">
+            <a href="#" class="button" id="population-button"></a>
+            <span class="button-label">Population Density</span>
+        </div>
+        <div class="button-wrapper">
+            <a href="#" class="button" id="urban-button"></a>
+            <span class="button-label">Built-up Surface</span>
+        </div>
+        <div class="button-wrapper">
+            <a href="#" class="button" id="heatmap-button"></a>
+            <span class="button-label">High Temperature Heatmap</span>
+        </div>
+        <div class="button-wrapper">
+            <a href="#" class="button" id="temperature-button"></a>
+            <span class="button-label">Temperature Distribution</span>
+        </div>
+    </div>
+
+    <div class="legend_source">
+        <div class="legend">
+            <h2 id="h2_legend">Temperature</h2>
+            <div id="legend_temp">
+                <div class="legend-text" id="legend-text-temp">
+                    <i><div class="temp_legend_gradient"></div></i>
+                    <table id="table_temp">
+                      <tr>
+                          <td class="tr_temp"><i>22</i></td>
+                          <td class="tr_temp"><i>26.5</i></td>
+                          <td><i>31℃</i></td>
+                      </tr>
+                    </table>
+                </div>             
+            </div>
+            <h2 id="h2_legend">Population Density</h2>
+            <div id="legend_temp">
+                <div class="legend-text" id="legend-text-temp">
+                    <i><div class="pop_legend_gradient"></div></i>
+                    <table id="table_temp">
+                      <tr>
+                          <td class="tr_temp"><i>0</i></td>
+                          <td class="tr_temp"><i>5000</i></td>
+                          <td><i>11,000 /km²</i></td>
+                      </tr>
+                    </table>
+                </div>             
+            </div>
+            <h2 id="h2_legend">Built-up Surface</h2>
+            <div id="legend_temp">
+                <div class="legend-text" id="legend-text-temp">
+                    <i><div class="land_legend_gradient"></div></i>
+                    <table id="table_temp">
+                      <tr>
+                          <td class="tr_temp"><i>50,000</i></td>
+                          <td class="tr_temp"><i>300,000</i></td>
+                          <td><i>600,000 m²/km²</i></td>
+                      </tr>
+                    </table>
+                </div>             
+            </div>
+        </div>
+        <div class="source">
+            <h2 id="h2_source">Source</h2>
+            <p id="p_source"><a href = "https://lpdaac.usgs.gov/products/mod11c3v061/">Land Surface Temperature</a> | <a href = "https://ghsl.jrc.ec.europa.eu/download.php">Poupulation Density / Built-up Surface</a> | <a href = "https://data.humdata.org/dataset/cod-ab-chn?">GBA Boundaries</a></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoibWF6enlsaW9uIiwiYSI6ImNsdng4eTZzMTF2Z2MyaW53NTcxdmg3OXQifQ.KfLEWLCqbisYj8NDb_DyBw';
+
+    var tempermap = new mapboxgl.Map({
+        container: 'temper',
+        style: 'mapbox://styles/mazzylion/clw2gd07q02kn01ocbstlfaaa', 
+        center: [112.850, 23.172],
+        zoom: 7.17,
+        projection: 'mercator'  
+    });
+    
+    tempermap.on('style.load', function () {
+        tempermap.setPaintProperty('satellite', 'raster-opacity', 0.45);
+    });
+    
+    var urbanmap = new mapboxgl.Map({
+        container: 'urban',
+        style: 'mapbox://styles/mazzylion/clw2gd07q02kn01ocbstlfaaa',
+        center: [112.850, 23.172],
+        zoom: 7.17,
+        projection: 'mercator'  
+    });
+    
+    urbanmap.on('style.load', function () {
+        urbanmap.setPaintProperty('satellite', 'raster-opacity', 0.45);
+    });
+    
+
+    var temperData = {
+        '2000': `https://raw.githubusercontent.com/mazzylion/CASA-0003/main/temp/mean/temp2000.geojson`,
+        '2005': `https://raw.githubusercontent.com/mazzylion/CASA-0003/main/temp/mean/temp2005.geojson`, 
+        '2010': `https://raw.githubusercontent.com/mazzylion/CASA-0003/main/temp/mean/temp2010.geojson`,
+        '2015': `https://raw.githubusercontent.com/mazzylion/CASA-0003/main/temp/mean/temp2015.geojson`,
+        '2020': `https://raw.githubusercontent.com/mazzylion/CASA-0003/main/temp/mean/temp2020.geojson`
+    };
+
+    var populationData = {
+        '2000': `https://raw.githubusercontent.com/mazzylion/CASA-0003/main/population/geojson_data/pop_2000.geojson`,
+        '2005': `https://raw.githubusercontent.com/mazzylion/CASA-0003/main/population/geojson_data/pop_2005.geojson`, 
+        '2010': `https://raw.githubusercontent.com/mazzylion/CASA-0003/main/population/geojson_data/pop_2010.geojson`,
+        '2015': `https://raw.githubusercontent.com/mazzylion/CASA-0003/main/population/geojson_data/pop_2015.geojson`,
+        '2020': `https://raw.githubusercontent.com/mazzylion/CASA-0003/main/population/geojson_data/pop_2020.geojson`
+    };
+    
+    var urbanData = {
+        '2000': `https://raw.githubusercontent.com/mazzylion/CASA-0003/main/land/geojson_data/urban_2000.geojson`,
+        '2005': `https://raw.githubusercontent.com/mazzylion/CASA-0003/main/land/geojson_data/urban_2005.geojson`, 
+        '2010': `https://raw.githubusercontent.com/mazzylion/CASA-0003/main/land/geojson_data/urban_2010.geojson`,
+        '2015': `https://raw.githubusercontent.com/mazzylion/CASA-0003/main/land/geojson_data/urban_2015.geojson`,
+        '2020': `https://raw.githubusercontent.com/mazzylion/CASA-0003/main/land/geojson_data/urban_2020.geojson`
+    };
+
+    
+    var currentYear = '2000';
+    
+    updateHeatmapData(currentYear);
+
+    var yearSlider = document.getElementById('year-slider');
+    var yearLabel = document.getElementById('year-label');
+    yearSlider.addEventListener('input', function(e) {
+        var selectedYear = e.target.value;
+        currentYear = selectedYear;
+        yearLabel.innerText = selectedYear;
+        updateurbanMapLayer(selectedYear);
+        
+        if (tempermap.getLayoutProperty('high-temperature-heatmap', 'visibility') === 'visible')  {
+            updateHeatmapData(selectedYear);
+        } else {
+            updatetemperMapLayer(selectedYear);
+        }
+    });
+    
+    function updatetemperMapLayer(year) {
+        tempermap.getSource('tempLayer').setData(temperData[year]);
+    }
+    
+    function updateurbanMapLayer(year) {
+        urbanmap.getSource('popLayer').setData(populationData[year]);
+        urbanmap.getSource('urbanLayer').setData(urbanData[year]); 
+    }
+    
+    function updateHeatmapData(year) {
+        fetch(temperData[year])
+            .then(response => response.json())
+            .then(data => {
+                var highTemperatureData = data.features.filter(function(feature) {
+                    return feature.properties.value > 27; 
+                });
+
+                var formattedData = {
+                    "type": "FeatureCollection",
+                    "features": highTemperatureData
+                };
+            
+                if (tempermap.getSource('high-temperature-data')) {
+                    tempermap.getSource('high-temperature-data').setData(formattedData);
+                } else {
+                    tempermap.addSource('high-temperature-data', {
+                        type: 'geojson',
+                        data: formattedData
+                    });
+
+                    tempermap.addLayer({
+                        'id': 'high-temperature-heatmap',
+                        'type': 'heatmap',
+                        'source': 'high-temperature-data',
+                        'maxzoom': 9,
+                        'paint': {
+                            'heatmap-weight': {
+                                property: 'value', 
+                                type: 'exponential',
+                                stops: [
+                                    [27, 0], 
+                                    [28, 0.5], 
+                                    [29, 0.8], 
+                                    [30, 1],
+                                    [31, 1.5]
+                                ]
+                            },
+                            'heatmap-radius': 15,
+                            'heatmap-opacity': 0.8,
+                            'heatmap-color': [
+                                'interpolate',
+                                ['linear'],
+                                ['heatmap-density'],
+                                0, 'rgba(33,102,172,0)',
+                                0.2, 'rgba(103,169,207,1)',
+                                0.4, 'rgba(209,229,240,1)',
+                                0.6, 'rgba(253,219,199,1)',
+                                0.8, 'rgba(239,138,98,0.9)',
+                                1, 'rgba(203,67,53,0.75)'
+                            ]
+                        }
+                    });
+                }
+        })
+           
+            .catch(error => {
+                console.error('Error fetching high temperature data:', error);
+            });
+    }
+    
+    urbanmap.on('load', function() {
+        
+        var urbanButton = document.getElementById('urban-button');
+        var populationButton = document.getElementById('population-button');
+        
+        urbanmap.addSource('boundary', {
+            'type': 'geojson',
+            'data': 'https://raw.githubusercontent.com/mazzylion/CASA-0003/main/city_boudaries/GBA.geojson'
+        });
+
+        urbanmap.addLayer({
+            'id': 'boundary-layer',
+            'type': 'line', 
+            'source': 'boundary',
+            'layout': {},
+            'paint': {
+                'line-color': '#F1DEF9',  
+                'line-width': 1.5, 
+            }
+        }, null); 
+        
+        urbanmap.addSource('popLayer', {
+            'type': 'geojson',
+            'data': populationData[currentYear] 
+        });
+
+        urbanmap.addLayer({
+            'id': 'population-layer',
+            'type': 'fill',
+            'source': 'popLayer',
+            layout: {},
+            'paint': {
+                'fill-color': [
+                    'interpolate',
+                    ['linear'],
+                    ['get', 'value'], 
+                    0, 'rgba(235, 222, 240, 0.7)', 
+                    1000, 'rgba(195, 155, 211, 0.7)', 
+                    3000, 'rgba(155, 89, 182, 0.7)', 
+                    5000, 'rgba(136, 78, 160, 0.75)', 
+                    7000, 'rgba(118, 68, 138, 0.8)', 
+                    9000, 'rgba(99, 57, 116, 0.9)', 
+                    11000, 'rgba(81, 46, 95, 1)'
+                ],
+                'fill-opacity': 1 
+            }
+        }); 
+        
+        urbanmap.addSource('urbanLayer', {
+            'type': 'geojson',
+            'data': urbanData[currentYear] 
+        });
+
+        urbanmap.addLayer({
+            'id': 'urban-layer',
+            'type': 'fill',
+            'source': 'urbanLayer',
+            layout: {},
+            'paint': {
+                'fill-color': [
+                    'interpolate',
+                    ['linear'],
+                    ['get', 'value'], 
+                    50000, 'rgba(229, 232, 232, 0.7)', 
+                    100000, 'rgba(178, 186, 187, 0.7)', 
+                    200000, 'rgba(127, 140, 141, 0.7)', 
+                    300000, 'rgba(112, 123, 124, 0.75)', 
+                    400000, 'rgba(97, 106, 107, 0.8)',
+                    500000, 'rgba(81, 90, 90, 0.9)', 
+                    600000, 'rgba(66, 73, 73, 1)'
+                ],
+                'fill-opacity': 1 
+            }
+        }); 
+        
+        urbanmap.setLayoutProperty('urban-layer', 'visibility', 'none');
+        urbanmap.setLayoutProperty('population-layer', 'visibility', 'visible');
+        populationButton.classList.add('active');
+        urbanButton.classList.remove('active');
+        
+        urbanButton.addEventListener('click', function() {
+            urbanmap.setLayoutProperty('urban-layer', 'visibility', 'visible');
+            urbanmap.setLayoutProperty('population-layer', 'visibility', 'none');
+            urbanButton.classList.add('active');
+            populationButton.classList.remove('active');
+        });
+
+        populationButton.addEventListener('click', function() {
+            urbanmap.setLayoutProperty('urban-layer', 'visibility', 'none');
+            urbanmap.setLayoutProperty('population-layer', 'visibility', 'visible');
+            urbanButton.classList.remove('active');
+            populationButton.classList.add('active');
+        });
+    });
+        
+    tempermap.on('load', function() {
+        
+        updateHeatmapData(currentYear);
+        
+        tempermap.addSource('boundary', {
+            'type': 'geojson',
+            'data': 'https://raw.githubusercontent.com/mazzylion/CASA-0003/main/city_boudaries/GBA.geojson'
+        });
+                
+        var heatmapButton = document.getElementById('heatmap-button');
+        var temperatureButton = document.getElementById('temperature-button');
+        
+        tempermap.addLayer({
+            'id': 'boundary-layer-fill', 
+            'type': 'fill',
+            'source': 'boundary',
+            'layout': {},
+            'paint': {
+                'fill-color': '#D8D8D8', 
+                'fill-opacity': 0.15 
+            }
+        }, 'waterway-label'); 
+        
+        
+        tempermap.addSource('tempLayer', {
+            type: 'geojson',
+            data: temperData[currentYear]
+        });
+        
+        tempermap.addLayer({
+            'id': 'temp-layer',
+            'type': 'fill',
+            'source': 'tempLayer',
+            layout: {},
+            paint: {
+                'fill-color': [
+                    'interpolate',
+                    ['linear'],
+                    ['get', 'value'],
+                    21.5, 'rgba(40, 116, 166, 0.4)',  
+                    23, 'rgba(30, 132, 73, 0.4)',   
+                    25, 'rgba(183, 149, 11, 0.4)',    
+                    26, 'rgba(245, 176, 65, 0.4)',    
+                    28, 'rgba(203, 67, 53, 0.3)',  
+                    30.7, 'rgba(123, 36, 28, 0.3)'   
+                ],
+                'fill-opacity': 1,
+                'fill-outline-color': 'rgba(0,0,0,0)'
+            }
+        });
+        
+        var layers = tempermap.getStyle().layers;
+        var heatmapLayerIndex = layers.findIndex(layer => layer.id === 'your-heatmap-layer-id'); 
+
+        if (heatmapLayerIndex !== -1) {
+            var topLayerId = layers[heatmapLayerIndex].id;
+            tempermap.addLayer({
+                'id': 'boundary-layer',
+                'type': 'line',
+                'source': 'boundary',
+                'layout': {},
+                'paint': {
+                    'line-color': '#FAF7ED',
+                    'line-width': 1.5
+                }
+            }, topLayerId); 
+        } else {
+            setTimeout(function() {
+                tempermap.addLayer({
+                    'id': 'boundary-layer',
+                    'type': 'line',
+                    'source': 'boundary',
+                    'layout': {},
+                    'paint': {
+                        'line-color': '#FAF7ED',
+                        'line-width': 1.5
+                    }
+                });
+            }, 500); 
+        }       
+        
+        tempermap.setLayoutProperty('temp-layer', 'visibility', 'none');
+        tempermap.setLayoutProperty('high-temperature-heatmap', 'visibility', 'visible');
+        tempermap.setLayoutProperty('boundary-layer', 'visibility', 'visible');
+        tempermap.setLayoutProperty('boundary-layer-fill', 'visibility', 'visible');
+        heatmapButton.classList.add('active');
+        temperatureButton.classList.remove('active');
+        
+        
+        heatmapButton.addEventListener('click', function() {
+            tempermap.setLayoutProperty('temp-layer', 'visibility', 'none');
+            tempermap.setLayoutProperty('high-temperature-heatmap', 'visibility', 'visible');
+            tempermap.setLayoutProperty('boundary-layer', 'visibility', 'visible');
+            tempermap.setLayoutProperty('boundary-layer-fill', 'visibility', 'visible');
+            heatmapButton.classList.add('active');
+            temperatureButton.classList.remove('active');
+        });
+
+        temperatureButton.addEventListener('click', function() {
+            tempermap.setLayoutProperty('temp-layer', 'visibility', 'visible');
+            tempermap.setLayoutProperty('high-temperature-heatmap', 'visibility', 'none');
+            tempermap.setLayoutProperty('boundary-layer', 'visibility', 'visible');
+            tempermap.setLayoutProperty('boundary-layer-fill', 'visibility', 'none');
+            heatmapButton.classList.remove('active');
+            temperatureButton.classList.add('active');
+        });
+        
+    });
+     
+    var mapComparison = new mapboxgl.Compare(urbanmap, tempermap, '#map-container');
+
+    tempermap.addControl(new mapboxgl.NavigationControl());
+    urbanmap.addControl(new mapboxgl.NavigationControl());
+    
+</script>
+
+</body>
+</html>
